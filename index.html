@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #f3f0f0,#070707, #858181);
+        }
+        .weather-container {
+            background: linear-gradient(135deg, #0e0d0d,#142ec5, #0c1101);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        input {
+            padding: 5px;
+            font-size: 16px;
+            border: 2px solid navy;
+            border-radius: 5px;
+            font-weight: bold;
+            color: rgb(66, 65, 65);
+        }
+        button {
+            padding: 6px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 2px solid #4f5158;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #858181;
+            &:hover{
+                background-color:transparent;
+                color: rgb(240, 232, 232);
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-container">
+        <h2 style="color: white; font-weight: 900;">Weather App</h2>
+        <input type="text" id="city" placeholder="Enter city name">
+        <button id="getWeather">Get Weather</button>
+        <h3 id="cityName" style="color: #f3f0f0;"></h3>
+        <p id="temp" style="color: #f3f0f0;"></p>
+        <p id="desc" style="color: #f3f0f0;"></p>
+    </div>
+    <script>
+        let api ="631df0cc1565ea85953ed791af7ba06d";
+        let getweather = document.getElementById("getWeather")
+        let cityName = document.getElementById("cityName")
+        let city = document.getElementById("city")
+        let temp = document.getElementById("temp")
+        let desc = document.getElementById("desc")
+        getweather.addEventListener("click",()=>{
+            let a =city.value
+            if(!a){
+                return alert("Please Enter your City Name")
+            }
+            
+          fetch(`https://api.openweathermap.org/data/2.5/weather?q=${a}&appid=${api}&units=metric`)
+          .then(res => res.json())
+          .then(data =>{
+             if (data.cod === "404") {
+                cityName.textContent = "City not found";
+                temp.textContent = "";
+                desc.textContent = "";
+                return;
+          }
+          cityName.textContent = data.name + ", " + data.sys.country;
+            temp.textContent = `Temperature: ${data.main.temp}°C`;
+            desc.textContent = `Weather: ${data.weather[0].description}`;
+        })
+         .catch(err => {
+            console.error(err)
+            alert("Something went wrong. Try again!")
+        })
+
+    })
+    </script>
+</body>
+</html>
